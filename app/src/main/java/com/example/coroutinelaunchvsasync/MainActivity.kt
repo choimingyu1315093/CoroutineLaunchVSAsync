@@ -12,6 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlin.random.Random
 import kotlin.system.measureTimeMillis
 
@@ -67,6 +68,21 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
+        //그냥 호출하는거 보다는 async를 사용하는게 더 빠르다
+        binding.btn4.setOnClickListener {
+            CoroutineScope(Dispatchers.IO).launch {
+                val a = getRandom1()
+                val b = getRandom2()
+                Log.d(TAG, "onCreate1: ${a+b}")
+            }
+
+            CoroutineScope(Dispatchers.IO).launch {
+                val a = async { getRandom1() }
+                val b = async { getRandom2() }
+                Log.d(TAG, "onCreate2: ${a.await()+b.await()}")
+            }
+        }
     }
 
     //결론은 하나의 코루틴 빌더(코루틴을 만드는 함수를 코루틴 빌더)에 코드를 넣으면 순서대로 작업한다.
@@ -75,13 +91,13 @@ class MainActivity : AppCompatActivity() {
     //실제 개발할 때 더 빠른 속도로 처리가 필요하다면 launch, async 각각 작업해보고 선택하는게 낫다.
 
     suspend fun getRandom1(): Int {
-        delay(3000L)
+        delay(8000L)
         Log.d(TAG, "getRandom1: 호출")
         return Random.nextInt(0, 500)
     }
 
     suspend fun getRandom2(): Int {
-        delay(800L)
+        delay(5000L)
         Log.d(TAG, "getRandom2: 호출2")
         return Random.nextInt(0, 500)
     }
