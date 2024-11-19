@@ -13,6 +13,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.random.Random
+import kotlin.system.measureTimeMillis
 
 const val TAG = "MainActivity"
 class MainActivity : AppCompatActivity() {
@@ -70,6 +71,8 @@ class MainActivity : AppCompatActivity() {
 
     //결론은 하나의 코루틴 빌더(코루틴을 만드는 함수를 코루틴 빌더)에 코드를 넣으면 순서대로 작업한다.
     //코루틴 빌더를 여러개 만들면 순서대로 작업하지 않는다.
+    //그리고 launch가 빠른지 async가 빠른지는 매번 정답처럼 정해져있지 않다.
+    //실제 개발할 때 더 빠른 속도로 처리가 필요하다면 launch, async 각각 작업해보고 선택하는게 낫다.
 
     suspend fun getRandom1(): Int {
         delay(3000L)
